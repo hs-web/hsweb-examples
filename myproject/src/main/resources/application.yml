@@ -1,0 +1,45 @@
+server:
+  port: 8080
+
+spring:
+  aop:
+      auto: true
+  datasource:
+     type: com.alibaba.druid.pool.DruidDataSource
+     driver-class-name : com.mysql.jdbc.Driver
+     url : jdbc:mysql://localhost:3306/myproject?useSSL=false&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
+     username : root
+     password : root
+
+hsweb:
+  app:
+    name: my-project
+    version: 1.0.0
+  users:
+      admin:
+        name: 超级管理员
+        username: admin
+        password: admin
+        roles: #用户的角色
+          - id: admin
+            name: 管理员
+          - id: user
+            name: 用户
+        permissions:  # 用户的权限
+          - id: test #权限标识,可以理解为资源
+            actions: query,get,update,delete,add #用户持有对该资源的操作
+            dataAccesses:   # 数据权限配置,此配置表示在对test进行query操作的时候,不能查询password和salt字段
+              - action: query
+                type: DENY_FIELDS
+                fields:
+                  - comment
+                  - status
+
+logging:
+  level:
+     org.hswebframework.web: DEBUG
+     org.hswebframework.web.cache: WARN
+     org.apache.ibatis: DEBUG
+     org.mybatis: DEBUG
+mybatis:
+  mapper-locations: classpath:com/mycompany/dao/mybatis/**/*.xml
